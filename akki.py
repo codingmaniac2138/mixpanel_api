@@ -104,8 +104,8 @@ class Mixpanel(object):
 
 
     def email_function(self):
-        fromaddr = "suhas.j@consultadd.com"
-        toaddr = "akshay.j@consultadd.in"
+        fromaddr = "senders email"
+        toaddr = "receivers email"
         msg = MIMEMultipart()
         msg['From'] = fromaddr
         msg['Subject'] = 'Test mail for mixpanel api'
@@ -122,7 +122,7 @@ class Mixpanel(object):
                             
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
-        server.login(fromaddr, "myid@2138")
+        server.login(fromaddr, "passowrd")
         msg['To'] = toaddr
         text = msg.as_string()
         server.sendmail(fromaddr, msg['To'].split(','), text)
