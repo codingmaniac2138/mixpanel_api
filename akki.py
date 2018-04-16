@@ -23,6 +23,12 @@ import base64
 import json
 import urllib
 import urllib2
+import smtplib
+
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
 
 class Mixpanel(object):
 
@@ -93,6 +99,36 @@ class Mixpanel(object):
         response = urllib2.urlopen(request, timeout=120)
         return json.loads(response.read())
 
+
+
+
+
+    def email_function(self):
+        fromaddr = "suhas.j@consultadd.com"
+        toaddr = "akshay.j@consultadd.in"
+        msg = MIMEMultipart()
+        msg['From'] = fromaddr
+        msg['Subject'] = 'Test mail for mixpanel api'
+        body = "Hi \n\nIts a test mail to confirm if the reports are sent automaicaly using Mixpanel Api for Python.\n\nThank You,\n Suhas Jadhav."
+        msg.attach(MIMEText(body,'plain'))
+        filenames = ["Export_report.csv"]
+
+        for filename in filenames:
+            part = MIMEBase('application', 'octet-stream')
+            part.set_payload((open(filename, "rb")).read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition', "attachment; filename= %s" %filename)
+            msg.attach(part)
+                            
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(fromaddr, "myid@2138")
+        msg['To'] = toaddr
+        text = msg.as_string()
+        server.sendmail(fromaddr, msg['To'].split(','), text)
+        server.quit()
+
+
 # -------------------------------------------------------------------------------------------
 
 
@@ -154,7 +190,7 @@ if __name__ == '__main__':
         writer.writerows([data_dict])
          
     print("Writing complete")
-
+    api.email_function()
 
     # writing the data on csv file
 
